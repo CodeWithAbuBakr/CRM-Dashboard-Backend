@@ -1,5 +1,7 @@
 import  jwt from 'jsonwebtoken'
 import UserModel from '../models/user.js'
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Use a consistent JWT secret - either from environment or fallback
 const JWT_SECRET = process.env.JWT_SECRET;

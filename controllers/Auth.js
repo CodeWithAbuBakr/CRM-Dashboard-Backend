@@ -39,35 +39,34 @@ const register = async (req, res) => {
 
 const Login = async (req, res) => {
   try {
-    const { email, password } = req.body
-
-    const user = await UserModel.findOne({ email })
+    const { email, password } = req.body;
+    const user = await UserModel.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "Invalid credentials" })
+      return res.status(404).json({ success: false, message: "Invalid credentials" });
     }
 
-    const ispassaowrdValid = await bcryptjs.compare(password, user.password)
-    if (!ispassaowrdValid) {
-      return res.status(404).json({ success: false, message: "Invalid credentials" })
-
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(404).json({ success: false, message: "Invalid credentials" });
     }
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET)
+
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET);
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,          // required since backend is HTTPS
-      sameSite: "none",      // required for cross-site cookies
+      secure: true,     // ⚠️ important on Vercel
+      sameSite: "none", // ⚠️ important for cross-site
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ success: true, message: "Login successfully", user, token })
-
+    res.status(200).json({ success: true, message: "Login successfully", user, token });
   } catch (error) {
-    res.status(500).json({ success: false, message: "interanl server ereo" })
-    console.log(error)
+    res.status(500).json({ success: false, message: "internal server error" });
+    console.log("Login error:", error);
   }
-}
+};
+
 const Logout = async (req, res) => {
   try {
     res.clearCookie('token')

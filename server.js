@@ -19,14 +19,15 @@ const app = express();
 DbCon();
 
 // Middleware setup
-app.use(express.json({ limit: '10mb' })); 
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: [
         'http://localhost:5173',
-        'http://192.168.1.5:5173'
+        'http://192.168.1.5:5173',
+        'https://crm-dashboard-frontend-pi.vercel.app'
     ]
 }));
 app.options('*', cors());

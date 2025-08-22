@@ -67,15 +67,21 @@ const Login = async (req, res) => {
   }
 };
 
+// backend/controllers/authController.js
 const Logout = async (req, res) => {
   try {
-    res.clearCookie('token')
-    res.status(200).json({ message: "user Logout successfully" })
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,      // same as login
+      sameSite: "none",  // same as login
+    });
+    return res.status(200).json({ success: true, message: "User logged out successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "interanl server ereo" })
-    console.log(error)
+    console.error("Logout error:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};
+
 const CheckUser = async (req, res) => {
   try {
     const user = req.user
